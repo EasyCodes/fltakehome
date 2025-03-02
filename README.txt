@@ -11,7 +11,7 @@ This project is for an interview with Flow Labs. All rights reserved to me, and/
 | --- | ------------------------------- | ----------- |
 | 1   | C++ HMM-MMM                     |             |
 | 2   | Python Wrapper for #1           |             |
-| 3   | Python script to use #2         |             |
+| 3   | Python script to use #2         | in progress |
 | 4   | Pulsar and Postgres integration |             |
 | 5   | Docker                          |             |
 | 6   | K8s                             |             |
