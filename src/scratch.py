@@ -2,11 +2,11 @@ from matplotlib import collections as mc
 import pylab as pl
 
 from utils import load_edges, load_events
+from pmap_matcher import get_hmm_model, prepare_hmm_data
 
 
-if __name__ == "__main__":
+def inspect_edges():
   edges = load_edges()
-  # events = load_events()
 
   start_nodes = set(edge['start_node_id'] for edge in edges)
   end_nodes = set(edge['end_node_id'] for edge in edges)
@@ -24,3 +24,30 @@ if __name__ == "__main__":
   ax.autoscale()
   ax.margins(0.1)
   pl.show()
+  
+
+def get_journeys(events: list[dict]) -> list[dict]:
+  journey_ids = set(event['journey_id'] for event in events)
+  journeys = []
+  for journey_id in journey_ids:
+    data_points = [event for event in events if event['journey_id'] == journey_id]
+    
+    # could drop journey_key after sorted to save space in lists
+    data_points = sorted(data_points, key=lambda d: d['timestamp'])
+    journeys.append(data_points)
+  
+  return journeys
+    
+
+if __name__ == "__main__":
+  import pdb; pdb.set_trace()
+  edges = load_edges()
+  events = load_events()
+  journeys = get_journeys(events)
+
+  import pdb; pdb.set_trace()
+  emissions, transitions = prepare_hmm_data(events, edges)
+
+  model = get_hmm_model(emissions, transitions)
+
+  prob, likely_path = model.decode(journeys[0], algorithm='viterbi')
