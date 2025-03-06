@@ -36,8 +36,7 @@ def find_candidate_edges(events, edges):
   return candidates
 
 
-def prepare_hmm_data(gps_points, edges, sigma_d=5.0, sigma_theta=10.0, sigma_v=5.0):
-    import pdb; pdb.set_trace()    
+def prepare_hmm_data(gps_points, edges, sigma_d=5.0, sigma_theta=10.0, sigma_v=5.0): 
     candidates = find_candidate_edges(gps_points, edges)
     
     M = max(len(c) for c in candidates)  # Max candidates per point

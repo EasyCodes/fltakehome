@@ -16,6 +16,9 @@ def inspect_edges():
   print(f'num of ending nodes {len(start_nodes)}')
   print(f'unique nodes {len(start_nodes & end_nodes)}')
 
+
+def plot_edgets():
+  edges = load_edges()
   lines = [edge['gps']['coordinates'] for edge in edges]
 
   lc = mc.LineCollection(lines, linewidths=2)
@@ -38,16 +41,17 @@ def get_journeys(events: list[dict]) -> list[dict]:
   
   return journeys
     
-
-if __name__ == "__main__":
-  import pdb; pdb.set_trace()
+def get_trained_model()
   edges = load_edges()
   events = load_events()
   journeys = get_journeys(events)
 
-  import pdb; pdb.set_trace()
   emissions, transitions = prepare_hmm_data(events, edges)
 
   model = get_hmm_model(emissions, transitions)
 
   prob, likely_path = model.decode(journeys[0], algorithm='viterbi')
+
+
+if __name__ == "__main__":
+  inspect_edges()
