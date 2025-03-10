@@ -5,7 +5,7 @@ import numpy as np
 from hmmlearn import hmm
 
 from hooks.postgres_hooks import record_results
-from hooks.pulsar_hooks import get_consumer
+from hooks.pulsar_hooks import get_client, get_consumer
 from utils import get_journeys, load_edges, load_events
 
 
@@ -87,43 +87,57 @@ def initialize_service():
     if not model:
         raise 'MAP_MATCHER Initialization Failed: no model found'
 
-    consumer = get_consumer()  
-    if not consumer:
+    client = get_client()
+    if not client:
         raise 'MAP_MATCHER Initialization Failed: no Pulsar client found'
 
-    return [model, consumer]
+    consumer = get_consumer(client)  
+    if not consumer:
+        raise 'MAP_MATCHER Initialization Failed: no Pulsar consumer found'
+
+    return [model, client, consumer]
 
 
 def run():
     batch = []
-    model, consumer = initialize_service()
+    model, client, consumer = initialize_service()
 
-    while True:
-        msg = consumer.receive()
+    processed_count = 0
+    try:
+        while True:
+            msg = consumer.receive()
 
-        try:
-            payload = json.loads(msg.data().decode("utf-8"))
+            try:
+                payload = json.loads(msg.data().decode("utf-8"))
 
-            if not payload:
-                log.error('Payload is empty')
+                if not payload:
+                    log.error('Payload is empty')
 
-            journeys = get_journeys(payload)
-            if not journeys:
-                log.error('Could not find Journeys in payload provided')
+                journeys = get_journeys(payload)
+                if not journeys:
+                    log.error('Could not find Journeys in payload provided')
 
-            for journey in journeys: 
-                mapping = model.decode(journey, algorithm='viterbi')
-                batch.append([journey, mapping])
+                for journey in journeys: 
+                    # mapping = model.decode(journey, algorithm='viterbi')
+                    # batch.append([journey, mapping])
+                    processed_count += 1
+                    log.error(f'Journeys processed: {processed_count}')
 
-            if not batch:
-                log.error('Payload consumed with no mapping generated')
 
-            record_results(batch)
-            consumer.acknowledge(msg)
+                if not batch:
+                    log.error('Payload consumed with no mapping generated')
 
-        except Exception as e:
-            log.error(f"Error processing message: {e}")
-            consumer.negative_acknowledge(msg)
+                record_results(batch)
+                consumer.acknowledge(msg)
+
+            except Exception as e:
+                log.error(f"Error processing message: {e}")
+                consumer.negative_acknowledge(msg)
+    except KeyboardInterrupt:
+        log.info('Keyboard interrupt detected, shutting down consumer...')
+    finally:
+        consumer.close()
+        client.close()
 
 
 if __name__ == "__main__":
