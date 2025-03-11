@@ -17,3 +17,23 @@ This project is for an interview with Flow Labs. All rights reserved to me, and/
 | 6   | K8s                             |             |
 | 7   | Airflow DAG                     |             |
 | 8   | Documentation                   | in progress |
+
+
+# Python Setup
+- pip install 'apache-airflow[cncf.kubernetes]'
+
+# Setup
+- install Docker Desktoo
+- Open Settings in Docker Desktop
+    - open the Kubernetes tab, click the toggle for 'Enable Kubernetes'
+    - Click 'Apply & Restart'
+
+#TODO replace this with the 'correct thing to do' to configure, hopefully
+- Copy Kube settings:
+    - run: `kubectl config use-context docker-desktop
+    - then: `kubectl config view --minify --raw > Source/FlowLabs/.kube`
+
+# Run the App
+- from the root directory run: `docker compose build & docker compose up -d`
+- to run Airflow, from the same directory: `docker compose build -f airflow/compose.yaml & docker compose up -d -f airflow/compose.yaml`
+- monitor terminal for results

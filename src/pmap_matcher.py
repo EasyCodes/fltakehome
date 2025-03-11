@@ -123,7 +123,6 @@ def run():
                     processed_count += 1
                     log.error(f'Journeys processed: {processed_count}')
 
-
                 if not batch:
                     log.error('Payload consumed with no mapping generated')
 
