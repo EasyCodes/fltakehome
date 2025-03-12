@@ -7,11 +7,11 @@ services:
       context: .
     ports:
       - 8000:8000
-    depends_on:
-      db:
-        condition: service_healthy
-      broker:
-        condition: service_healthy
+    # depends_on:
+    #   db:
+    #     condition: service_healthy
+    #   broker:
+    #     condition: service_healthy
   db:
     image: postgres
     restart: always

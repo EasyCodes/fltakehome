@@ -48,4 +48,4 @@ COPY . .
 EXPOSE 8000
 
 # Run the application.
-CMD python3 src/map_matcher.py
+CMD python3 src/pmap_matcher.py

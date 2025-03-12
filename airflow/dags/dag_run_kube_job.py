@@ -1,6 +1,7 @@
 import datetime
 import yaml
 
+
 from airflow.decorators import dag, task
 from airflow.providers.cncf.kubernetes.operators.job import KubernetesJobOperator
 
@@ -18,12 +19,13 @@ def load_k8s_config():
     catchup=False,
     schedule_interval='0 12 * * *'
 )
-def ingest_map_matching():
+def run_kube_job():
     # https://airflow.apache.org/docs/apache-airflow-providers-cncf-kubernetes/stable/operators.html#id3
     KubernetesJobOperator(
-        task_id='run_k8s_job',
+        task_id='run_kube_job',
         namespace='default',
-        config_file='../config/config'
+        config_file='/opt/airflow/kube/config',
+        job_template_file='/opt/airflow/kube/k8s_job.yaml'
     )
 
-ingest_map_matching()
+run_kube_job()

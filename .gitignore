@@ -7,3 +7,5 @@
 db/
 data/
 logs/
+
+kube_config

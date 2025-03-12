@@ -31,7 +31,7 @@ This project is for an interview with Flow Labs. All rights reserved to me, and/
 #TODO replace this with the 'correct thing to do' to configure, hopefully
 - Copy Kube settings:
     - run: `kubectl config use-context docker-desktop
-    - then: `kubectl config view --minify --raw > Source/FlowLabs/.kube`
+    - then: `kubectl config view --minify --raw > <path_to_project>/FlowLabs/airflow/kube/config`
 
 # Run the App
 - from the root directory run: `docker compose build & docker compose up -d`

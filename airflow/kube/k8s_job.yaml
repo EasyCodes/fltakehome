@@ -8,7 +8,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: app
-          image: your-docker-compose-app-image:latest
+          image: flowlabs-mapper_service:latest
           env:
             - name: POSTGRES_URL
             - name: PULSAR_BROKER
